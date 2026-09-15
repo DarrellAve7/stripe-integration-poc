@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+  <header>
+    <p class="eyebrow">Python + Stripe Sandbox</p>
+    <h1>Payment integration, from no code to low code.</h1>
+    <p>Each option keeps payment details on Stripe-hosted pages.</p>
+  </header>
+
+  <section class="cards">
+    <article>
+      <p class="number">1</p>
+      <h2>Payment Link</h2>
+      <p>Create a hosted payment page in the Stripe Dashboard. No application payment code is required.</p>
+      {% if payment_link_url %}
+        <a class="button" href="{{ payment_link_url }}">Open Payment Link</a>
+      {% else %}
+        <p class="notice">Set <code>STRIPE_PAYMENT_LINK_URL</code> to enable.</p>
+      {% endif %}
+    </article>
+    <article>
+      <p class="number">2</p>
+      <h2>Hosted Checkout</h2>
+      <p>The server creates a one-time Checkout Session and redirects the customer to Stripe.</p>
+      <form method="post" action="{{ url_for('create_one_time_checkout') }}">
+        <button {% if not one_time_ready %}disabled{% endif %}>Buy demo item</button>
+      </form>
+    </article>
+    <article>
+      <p class="number">3</p>
+      <h2>Hosted subscription</h2>
+      <p>The same API creates a recurring Checkout Session from a Stripe Price.</p>
+      <form method="post" action="{{ url_for('create_subscription_checkout') }}">
+        <button {% if not subscription_ready %}disabled{% endif %}>Start subscription</button>
+      </form>
+    </article>
+  </section>
+
+  <section class="events">
+    <h2>Webhook receipts</h2>
+    <p>Payments are fulfilled from <code>checkout.session.completed</code>, not the redirect.</p>
+    {% if events %}
+      <table>
+        <thead><tr><th>Session</th><th>Mode</th><th>Status</th><th>Received</th></tr></thead>
+        <tbody>
+          {% for event in events %}
+            <tr><td><code>{{ event.id }}</code></td><td>{{ event.mode }}</td><td>{{ event.payment_status }}</td><td>{{ event.received_at }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="notice">No completion webhooks received yet.</p>
+    {% endif %}
+  </section>
+{% endblock %}

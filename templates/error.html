@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+  <p class="eyebrow">Configuration or Stripe error</p>
+  <h1>Checkout could not start.</h1>
+  <p>{{ message }}</p>
+  <a class="button" href="{{ url_for('index') }}">Return to demo</a>
+{% endblock %}

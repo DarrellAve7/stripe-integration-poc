@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+  <p class="eyebrow">Stripe Checkout</p>
+  <h1>Thanks for your order.</h1>
+  <p>Session <code>{{ session.id }}</code> is {{ session.payment_status }}.</p>
+  <p>The webhook receipt on the home page is the reliable fulfillment signal.</p>
+  <a class="button" href="{{ url_for('index') }}">Return to demo</a>
+{% endblock %}

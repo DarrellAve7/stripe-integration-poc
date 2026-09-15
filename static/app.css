@@ -1,0 +1,17 @@
+:root { font-family: Inter, system-ui, sans-serif; color: #1d1d2e; background: #f7f8fc; }
+body { margin: 0; }
+main { max-width: 1040px; margin: 0 auto; padding: 4rem 1.5rem; }
+h1 { font-size: clamp(2.2rem, 5vw, 4.5rem); max-width: 800px; margin: .25rem 0 1rem; line-height: 1.05; }
+h2 { margin: .25rem 0 .75rem; }
+p { line-height: 1.55; }
+.eyebrow, .number { color: #635bff; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(225px, 1fr)); gap: 1rem; margin: 3rem 0; }
+article, .events { background: white; border: 1px solid #e3e4ee; border-radius: 12px; padding: 1.5rem; }
+.number { margin: 0; }
+button, .button { display: inline-block; border: 0; border-radius: 6px; background: #635bff; color: white; cursor: pointer; font: inherit; font-weight: 650; padding: .7rem 1rem; text-decoration: none; }
+button:disabled { background: #a9a6c7; cursor: not-allowed; }
+.notice { color: #5a5a70; font-size: .9rem; }
+code { font-size: .9em; }
+table { border-collapse: collapse; width: 100%; }
+th, td { border-bottom: 1px solid #e3e4ee; padding: .6rem; text-align: left; }
+@media (max-width: 600px) { main { padding-top: 2rem; } table { font-size: .8rem; } }
