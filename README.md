@@ -1,15 +1,15 @@
-# Stripe Integration POC
+# Ave7Lift Stripe POC
 
 A minimal Flask application that demonstrates Stripe payment integrations in a Sandbox. The POC implements the lowest-effort hosted paths and makes the next, more customizable paths visible for comparison.
 
-| Rank | Stripe option | Relative effort | POC status | Demo action |
-| --- | --- | --- |
-| 1 | [Payment Links](https://docs.stripe.com/payment-links) | Very low | Implemented | Opens a Dashboard-created hosted payment page |
-| 2 | [Hosted Checkout](https://docs.stripe.com/checkout/quickstart) | Low | Implemented | Creates a one-time Checkout Session and redirects to Stripe |
-| 2 | Hosted Checkout subscription | Low | Implemented | Creates a recurring Checkout Session and redirects to Stripe |
-| 3 | [Embedded Checkout form](https://docs.stripe.com/checkout/form/quickstart) | Medium | Deferred | Mounts Stripe Checkout inside the app with Stripe.js |
-| 4 | [Payment Element with Checkout Sessions](https://docs.stripe.com/payments/quickstart) | Medium-high | Implemented | Builds a custom in-page payment form with Stripe.js |
-| 5 | [Payment Element with Payment Intents](https://docs.stripe.com/payments/quickstart-payment-intents) | High | Deferred | Owns the lower-level payment lifecycle and checkout state |
+| POC path | Stripe option | Relative effort | Availability | Demo action |
+| --- | --- | --- | --- | --- |
+| 1 | [Payment Links](https://docs.stripe.com/payment-links) | Very low | **Available now** | Opens a Dashboard-created hosted payment page |
+| 2 | [Hosted Checkout](https://docs.stripe.com/checkout/quickstart) | Low | **Available now** | Creates a one-time Checkout Session and redirects to Stripe |
+| 3 | Hosted Checkout subscription | Low | **Available now** | Creates a recurring Checkout Session and redirects to Stripe |
+| 4 | [Payment Element with Checkout Sessions](https://docs.stripe.com/payments/quickstart) | Medium-high | **Available now** | Builds a custom in-page payment form with Stripe.js |
+| 5 | [Embedded Checkout form](https://docs.stripe.com/checkout/form/quickstart) | Medium | Deferred | Mounts Stripe Checkout inside the app with Stripe.js |
+| 6 | [Payment Element with Payment Intents](https://docs.stripe.com/payments/quickstart-payment-intents) | High | Deferred | Owns the lower-level payment lifecycle and checkout state |
 
 Card data is entered only on Stripe-hosted pages. The demo records `checkout.session.completed` webhook receipts to show the reliable fulfillment signal; the success-page redirect is not used to fulfill an order.
 
@@ -17,11 +17,18 @@ The Payment Element form also uses Stripe's Contact Details Element to collect t
 
 The **Transactions** page lists received completion webhooks newest first and identifies the POC integration that created each new Checkout Session.
 
-See [the integration options roadmap](docs/integration-options.md) for the trade-offs and the planned progression.
+## Available documentation
+
+> [!IMPORTANT]
+> **Technical whitepaper available:** [POC goals, implementation details, Mermaid flows, and four-option comparison](docs/technical-whitepaper.md).
+>
+> **Fix Now roadmap available:** [minimal real-checkout scope, Stripe data synchronization, downstream fulfillment, and the billing-management roadmap](docs/fix-now-roadmap.md).
+
+See [the integration options roadmap](docs/integration-options.md) for the trade-offs and planned progression.
 
 ## Status
 
-**v0.1.0 MVP/POC:** The first Stripe Sandbox integration has been verified end to end: a Checkout payment produced a `checkout.session.completed` webhook receipt in the application.
+**v0.2.0 MVP/POC:** The four implemented Stripe Sandbox paths have been exercised end to end, with `checkout.session.completed` receipts captured by the application.
 
 ## Start a local Sandbox test
 

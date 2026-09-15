@@ -117,6 +117,7 @@ class StripeDemoTestCase(unittest.TestCase):
 
         self.assertIn(b"<title>Ave7Lift Stripe POC</title>", response.data)
         self.assertIn(b"ave7-short-logo-white.png", response.data)
+        self.assertIn(b"Ave7Lift POC: Payment integration", response.data)
         self.assertIn(b"What changes between the hosted options?", response.data)
         self.assertIn(b"Flask creates a Session?", response.data)
         self.assertIn(b"Browser -&gt; Stripe Payment Link", response.data)
