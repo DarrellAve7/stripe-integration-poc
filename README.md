@@ -17,12 +17,16 @@ The Payment Element form also uses Stripe's Contact Details Element to collect t
 
 The **Transactions** page lists received completion webhooks newest first and identifies the POC integration that created each new Checkout Session.
 
+The **Fix Now** page sketches the next MVP step using the custom in-app Payment Element path: server-owned service selection, durable checkout attempts, Stripe metadata/idempotency, webhook status synchronization, and a pending manual-fulfillment queue. Authentication remains an intentional integration boundary.
+
 ## Available documentation
 
 > [!IMPORTANT]
 > **Technical whitepaper available:** [POC goals, implementation details, Mermaid flows, and four-option comparison](docs/technical-whitepaper.md).
 >
 > **Fix Now roadmap available:** [minimal real-checkout scope, Stripe data synchronization, downstream fulfillment, and the billing-management roadmap](docs/fix-now-roadmap.md).
+>
+> **Payment gateway abstraction recommendation:** [why Stripe and future providers should sit behind an internal payment API](docs/payment-gateway-abstraction.md).
 
 See [the integration options roadmap](docs/integration-options.md) for the trade-offs and planned progression.
 
@@ -66,7 +70,7 @@ See [the integration options roadmap](docs/integration-options.md) for the trade
    | `STRIPE_SUBSCRIPTION_PRICE_ID` | Recurring Price ID beginning `price_...`, not the `prod_...` Product ID |
    | `STRIPE_WEBHOOK_SECRET` | Any placeholder value; `start.sh` obtains the active value |
 
-   Do not use or commit live keys. `start.sh` obtains a fresh webhook signing secret each time it runs and supplies it to the app without modifying `.env`.
+   Do not use or commit live keys. The app refuses live secret and publishable keys. `start.sh` obtains a fresh webhook signing secret each time it runs and supplies it to the app without modifying `.env`.
 
 6. In another terminal, load the environment and start the application:
 

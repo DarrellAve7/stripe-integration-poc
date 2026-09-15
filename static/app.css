@@ -21,6 +21,9 @@ button:disabled { background: #c5c0ba; color: #625d58; cursor: not-allowed; }
 .deferred { background: var(--orange); border: 1px solid var(--orange-dark); border-radius: 999px; color: var(--black); display: inline-block; font-size: .75rem; font-weight: 800; margin-left: .25rem; padding: .1rem .4rem; text-transform: uppercase; }
 code { font-size: .9em; }
 #payment-form { background: var(--white); border: 1px solid var(--border); border-radius: 12px; margin-top: 2rem; max-width: 560px; padding: 1.5rem; }
+.selection-form { background: var(--white); border: 1px solid var(--border); border-radius: 12px; display: grid; gap: .75rem; margin: 2rem 0; max-width: 560px; padding: 1.5rem; }
+.selection-form label { font-weight: 700; }
+.selection-form select { border: 1px solid var(--border); border-radius: 6px; font: inherit; padding: .65rem; }
 #contact-details { margin-bottom: 1rem; }
 #payment-element { margin-bottom: 1rem; }
 table { border-collapse: collapse; width: 100%; }

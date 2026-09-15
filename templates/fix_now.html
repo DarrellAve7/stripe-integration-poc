@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+  <p class="eyebrow">Next-step MVP sketch</p>
+  <h1>Fix Now</h1>
+  <p>Start a secure checkout for <code>{{ target_item_id }}</code>. The server maps your selection to an allowed Stripe Price; it never accepts an amount from the browser.</p>
+  <p class="notice">Authentication and item authorization are intentionally documented integration boundaries for this POC.</p>
+
+  {% if products %}
+    <form class="selection-form" method="post" action="{{ url_for('create_fix_now_checkout') }}">
+      <label for="product_key">Choose a service</label>
+      <select id="product_key" name="product_key" required>
+        {% for product in products %}
+          <option value="{{ product.key }}">{{ product.label }}</option>
+        {% endfor %}
+      </select>
+      <button>Continue to secure payment</button>
+    </form>
+  {% else %}
+    <p class="notice">Configure at least one valid Stripe Price ID to enable Fix Now checkout.</p>
+  {% endif %}
+
+  <section class="events">
+    <h2>Fix Now checkout attempts</h2>
+    {% if attempts %}
+      <table>
+        <thead><tr><th>Created (UTC)</th><th>Service</th><th>Status</th><th>Fulfillment</th><th>Attempt</th></tr></thead>
+        <tbody>
+          {% for attempt in attempts %}
+            <tr>
+              <td>{{ attempt.created_at }}</td>
+              <td>{{ attempt.product_key }}</td>
+              <td>{{ attempt.status }}</td>
+              <td>{{ attempt.fulfillment_status or "Not queued" }}</td>
+              <td><a href="{{ url_for('fix_now_attempt_page', attempt_id=attempt.id) }}"><code>{{ attempt.id }}</code></a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="notice">No Fix Now checkout attempts yet.</p>
+    {% endif %}
+  </section>
+{% endblock %}

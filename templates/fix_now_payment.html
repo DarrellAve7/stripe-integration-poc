@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+  <p class="eyebrow">Fix Now custom checkout</p>
+  <h1>Secure payment</h1>
+  <p>Complete payment for <code>{{ target_item_id }}</code>. Stripe.js renders the form and sends payment details directly to Stripe.</p>
+  <p class="notice">Attempt <code>{{ attempt_id }}</code> - {{ product_label }}</p>
+  <form id="payment-form">
+    <div id="contact-details"></div>
+    <div id="payment-element"></div>
+    <p id="payment-error" class="notice" role="alert"></p>
+    <button id="submit-button" type="submit" disabled>Loading payment form...</button>
+  </form>
+{% endblock %}
+{% block scripts %}
+  <script src="https://js.stripe.com/dahlia/stripe.js"></script>
+  <script>
+    const errorElement = document.querySelector("#payment-error");
+    const submitButton = document.querySelector("#submit-button");
+    const paymentForm = document.querySelector("#payment-form");
+    const stripeClient = Stripe("{{ publishable_key }}");
+    const checkout = stripeClient.initCheckoutElementsSdk({
+      clientSecret: {{ client_secret|tojson }},
+    });
+
+    paymentForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      submitButton.disabled = true;
+      errorElement.textContent = "";
+
+      try {
+        const result = await checkout.loadActions();
+        if (result.type === "error") {
+          errorElement.textContent = result.error.message;
+          submitButton.disabled = false;
+          return;
+        }
+
+        const {error} = await result.actions.confirm();
+        if (error) {
+          errorElement.textContent = error.message;
+          submitButton.disabled = false;
+        }
+      } catch (error) {
+        errorElement.textContent = `Payment confirmation failed: ${error.message}`;
+        submitButton.disabled = false;
+      }
+    });
+
+    const contactDetailsElement = checkout.createContactDetailsElement();
+    contactDetailsElement.mount("#contact-details");
+    const paymentElement = checkout.createPaymentElement();
+    paymentElement.mount("#payment-element");
+    submitButton.disabled = false;
+    submitButton.textContent = "Pay and queue Fix Now";
+  </script>
+{% endblock %}

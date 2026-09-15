@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+  <p class="eyebrow">Fix Now checkout attempt</p>
+  <h1>{{ attempt.status|replace("_", " ")|title }}</h1>
+  <p>Attempt <code>{{ attempt.id }}</code> for <code>{{ attempt.target_item_id }}</code>.</p>
+  <table>
+    <tbody>
+      <tr><th>Service</th><td>{{ attempt.product_key }}</td></tr>
+      <tr><th>Checkout Session</th><td><code>{{ attempt.stripe_checkout_session_id or "Not created" }}</code></td></tr>
+      <tr><th>PaymentIntent</th><td><code>{{ attempt.stripe_payment_intent_id or "Not available" }}</code></td></tr>
+      <tr><th>Subscription</th><td><code>{{ attempt.stripe_subscription_id or "Not applicable" }}</code></td></tr>
+      <tr><th>Fulfillment queue</th><td>{{ attempt.fulfillment_status or "Not queued" }}</td></tr>
+    </tbody>
+  </table>
+  <p>The verified Stripe webhook, rather than this return page, updates the payment and fulfillment state.</p>
+  <a class="button" href="{{ url_for('fix_now') }}">Return to Fix Now</a>
+{% endblock %}
