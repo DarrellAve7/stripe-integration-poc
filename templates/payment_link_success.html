@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+  <p class="eyebrow">Stripe Payment Link</p>
+  <h1>Thanks for your payment.</h1>
+  <p>Stripe redirected here after completing the hosted Payment Link flow.</p>
+  <p>The webhook receipt on the demo home page is the reliable fulfillment signal.</p>
+  <a class="button" href="{{ url_for('index') }}">Return to demo</a>
+{% endblock %}

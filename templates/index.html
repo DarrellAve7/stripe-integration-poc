@@ -24,6 +24,13 @@
       <form method="post" action="{{ url_for('create_one_time_checkout') }}">
         <button {% if not one_time_ready %}disabled{% endif %}>Buy demo item</button>
       </form>
+      {% if not one_time_ready %}
+        {% if not one_time_price_ready %}
+          <p class="notice">Set a one-time Price ID beginning <code>price_...</code> to enable.</p>
+        {% else %}
+          <p class="notice">Set <code>STRIPE_SECRET_KEY</code> to enable.</p>
+        {% endif %}
+      {% endif %}
     </article>
     <article>
       <p class="number">3</p>
@@ -33,6 +40,65 @@
         <button {% if not subscription_ready %}disabled{% endif %}>Start subscription</button>
       </form>
     </article>
+    <article>
+      <p class="number">4</p>
+      <h2>Payment Element</h2>
+      <p>A custom payment form inside the app, powered by Checkout Sessions and Stripe.js.</p>
+      {% if payment_element_ready %}
+        <a class="button" href="{{ url_for('payment_element') }}">Open custom form</a>
+      {% elif not one_time_price_ready %}
+        <p class="notice">Set a one-time Price ID beginning <code>price_...</code> to enable.</p>
+      {% elif not publishable_key_ready %}
+        <p class="notice">Set <code>STRIPE_PUBLISHABLE_KEY</code> to enable.</p>
+      {% else %}
+        <p class="notice">Set <code>STRIPE_SECRET_KEY</code> to enable.</p>
+      {% endif %}
+    </article>
+  </section>
+
+  <section class="comparison">
+    <h2>What changes between the hosted options?</h2>
+    <table>
+      <thead><tr><th>Path</th><th>Configuration</th><th>When the customer clicks</th><th>Flask creates a Session?</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>1. Payment Link</td>
+          <td>Stripe Dashboard creates the product, price, and reusable link.</td>
+          <td><code>Browser -&gt; Stripe Payment Link</code></td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>2. Hosted Checkout</td>
+          <td>The app stores a one-time Price ID.</td>
+          <td><code>Browser -&gt; Flask -&gt; Stripe Checkout -&gt; Browser</code></td>
+          <td>Yes, one-time payment</td>
+        </tr>
+        <tr>
+          <td>3. Hosted subscription</td>
+          <td>The app stores a recurring Price ID.</td>
+          <td><code>Browser -&gt; Flask -&gt; Stripe Checkout -&gt; Browser</code></td>
+          <td>Yes, subscription</td>
+        </tr>
+        <tr>
+          <td>4. Payment Element</td>
+          <td>The app stores secret/publishable keys and a one-time Price ID.</td>
+          <td><code>Browser -&gt; Flask (client secret) -&gt; Stripe.js -&gt; Stripe -&gt; Browser</code></td>
+          <td>Yes, then Stripe.js confirms in-app</td>
+        </tr>
+        <tr>
+          <td>5. Embedded Checkout <span class="deferred">Deferred</span></td>
+          <td>The app stores a Price ID and creates an embedded Checkout Session.</td>
+          <td><code>Browser -&gt; Flask (client secret) -&gt; Stripe.js embedded Checkout -&gt; Stripe -&gt; Browser</code></td>
+          <td>Yes, with Stripe-hosted checkout embedded in-app</td>
+        </tr>
+        <tr>
+          <td>6. Payment Element + Payment Intents <span class="deferred">Deferred</span></td>
+          <td>The app calculates checkout state and creates a PaymentIntent.</td>
+          <td><code>Browser -&gt; Flask (PaymentIntent secret) -&gt; Stripe.js -&gt; Stripe -&gt; Browser</code></td>
+          <td>Yes, lowest-level payment API</td>
+        </tr>
+      </tbody>
+    </table>
   </section>
 
   <section class="events">
@@ -40,10 +106,10 @@
     <p>Payments are fulfilled from <code>checkout.session.completed</code>, not the redirect.</p>
     {% if events %}
       <table>
-        <thead><tr><th>Session</th><th>Mode</th><th>Status</th><th>Received</th></tr></thead>
+        <thead><tr><th>Session</th><th>POC option</th><th>Status</th><th>Received</th></tr></thead>
         <tbody>
           {% for event in events %}
-            <tr><td><code>{{ event.id }}</code></td><td>{{ event.mode }}</td><td>{{ event.payment_status }}</td><td>{{ event.received_at }}</td></tr>
+            <tr><td><code>{{ event.id }}</code></td><td>{{ event.poc_option }}</td><td>{{ event.payment_status }}</td><td>{{ event.received_at }}</td></tr>
           {% endfor %}
         </tbody>
       </table>

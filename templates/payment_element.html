@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+  <p class="eyebrow">Custom in-app checkout</p>
+  <h1>Payment Element</h1>
+  <p>Stripe.js renders this payment form. Payment details go directly to Stripe.</p>
+  <form id="payment-form">
+    <div id="contact-details"></div>
+    <div id="payment-element"></div>
+    <p id="payment-error" class="notice" role="alert"></p>
+    <button id="submit-button" type="submit" disabled>Loading payment form...</button>
+  </form>
+{% endblock %}
+{% block scripts %}
+  <script src="https://js.stripe.com/dahlia/stripe.js"></script>
+  <script>
+    const errorElement = document.querySelector("#payment-error");
+    const submitButton = document.querySelector("#submit-button");
+    const paymentForm = document.querySelector("#payment-form");
+    const stripeClient = Stripe("{{ publishable_key }}");
+    let checkout;
+
+    paymentForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!checkout) {
+        return;
+      }
+      submitButton.disabled = true;
+      errorElement.textContent = "";
+
+      try {
+        const result = await checkout.loadActions();
+        if (result.type === "error") {
+          errorElement.textContent = result.error.message;
+          submitButton.disabled = false;
+          return;
+        }
+
+        const {error} = await result.actions.confirm();
+        if (error) {
+          errorElement.textContent = error.message;
+          submitButton.disabled = false;
+        }
+      } catch (error) {
+        errorElement.textContent = `Payment confirmation failed: ${error.message}`;
+        submitButton.disabled = false;
+      }
+    });
+
+    async function initializePaymentElement() {
+      try {
+        const response = await fetch("/checkout/payment-element-session", {method: "POST"});
+        const body = await response.json();
+        if (!response.ok) {
+          throw new Error(body.error);
+        }
+
+        checkout = stripeClient.initCheckoutElementsSdk({
+          clientSecret: body.clientSecret,
+        });
+        const contactDetailsElement = checkout.createContactDetailsElement();
+        contactDetailsElement.mount("#contact-details");
+        const paymentElement = checkout.createPaymentElement();
+        paymentElement.mount("#payment-element");
+        submitButton.disabled = false;
+        submitButton.textContent = "Pay demo item";
+      } catch (error) {
+        errorElement.textContent = `Payment form could not load: ${error.message}`;
+        submitButton.textContent = "Payment form unavailable";
+      }
+    }
+
+    initializePaymentElement();
+  </script>
+{% endblock %}

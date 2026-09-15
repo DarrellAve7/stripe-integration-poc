@@ -3,10 +3,19 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Stripe Integration POC</title>
+    <title>Ave7Lift Stripe POC</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
   </head>
   <body>
-    <main>{% block content %}{% endblock %}</main>
+    <main>
+      <header class="site-header">
+        <a class="brand" href="{{ url_for('index') }}" aria-label="Ave7Lift Stripe POC home">
+          <img src="{{ url_for('static', filename='ave7-short-logo-white.png') }}" alt="Ave7Lift">
+        </a>
+        <nav><a href="{{ url_for('index') }}">Demo</a><a href="{{ url_for('transactions') }}">Transactions</a></nav>
+      </header>
+      {% block content %}{% endblock %}
+    </main>
+    {% block scripts %}{% endblock %}
   </body>
 </html>

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+  <p class="eyebrow">Stripe Sandbox</p>
+  <h1>Transactions</h1>
+  <p>Webhook receipts, newest first. This records payment completion received by the demo, not card data.</p>
+  {% if events %}
+    <table>
+      <thead><tr><th>Received (UTC)</th><th>POC option</th><th>Status</th><th>Session</th></tr></thead>
+      <tbody>
+        {% for event in events %}
+          <tr>
+            <td>{{ event.received_at }}</td>
+            <td>{{ event.poc_option }}</td>
+            <td>{{ event.payment_status }}</td>
+            <td><code>{{ event.id }}</code></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="notice">No completion webhooks received yet.</p>
+  {% endif %}
+{% endblock %}
